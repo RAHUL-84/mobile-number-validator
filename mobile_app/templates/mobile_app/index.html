@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mobile Validation</title>
+</head>
+<body>
+    <h1>Mobile Number Validation</h1>
+    <input type="text" id="mobile" placeholder="Enter mobile number">
+    <button onclick="validateMobile()">Validate</button>
+
+    <p id="result"></p>
+
+    <script>
+        function validateMobile() {
+            const mobile = document.getElementById("mobile").value;
+            fetch("/validate_mobile/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": getCookie("csrftoken")
+                },
+                body: "mobile=" + mobile
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerText = data.message;
+            });
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+</html>
